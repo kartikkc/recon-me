@@ -1,9 +1,7 @@
 require("dotenv").config;
 const express = require("express");
-const { body, validationResult } = require("express-validator");
-const bodyParser = require("body-parser");
 const connectToMongo = require("./db");
-const User = require("./models/users");
+
 const cors = require("cors");
 const app = express();
 app.use(cors());
@@ -18,21 +16,10 @@ app.get("/", (req, res) => {
 })
 
 // ROUTE-2: Add a new user to the Database
-app.post("/addNewUser", [
-    body("email").isEmail(),
-    body("password").isLength({ min: 5 }),
-    body("name").isLength({ min: 5 })
-], (req, res) => {
-    const { name, email, password } = req.body;
-    const user = User({
-        name: name,
-        email: email,
-        password: password
-    });
-    user.save().then(res.json(req.body.name))
-        .catch(error => { console.error(error) });
-    // res.json("This endpoint is to add user to the db");
-});
+app.use("/createuser", require("./routes/addNewUser"));
+
+// ROUTE-3: Login using Native Email and Password
+app.use("/login", require("./routes/login"));
 
 app.listen(PORT, () => {
     console.log("[STATUS] The server is Running on PORT: " + PORT);
