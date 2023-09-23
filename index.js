@@ -12,15 +12,15 @@ connectToMongo();
 
 //ROUTE-1 : Check the api is up and running
 app.get("/", (req, res) => {
-    res.json({ "STATUS": "app working fine" });
+    res.json({ "STATUS": "app working fine" })
 })
 
 // ROUTE-2: Add a new user to the Database
-app.use("/createuser", require("./routes/addNewUser"));
+app.use("/createuser", require("./routes/addNewUser"))
 
 // ROUTE-3: Login using Native Email and Password
-app.use("/login", require("./routes/login"));
+app.use("/login", require("./routes/login"))
 
 app.listen(PORT, () => {
-    console.log("[STATUS] The server is Running on PORT: " + PORT);
+    console.log("[STATUS] The server is Running on PORT: " + PORT)
 })

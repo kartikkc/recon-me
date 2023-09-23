@@ -1,10 +1,10 @@
+require("dotenv").config();
 const express = require("express");
 const router = express.Router();
 const User = require("../models/users");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { body, validationResult } = require("express-validator");
-
 
 const JWT_SECRET = "JAYDENisKing";
 router.post("/", [
@@ -47,6 +47,6 @@ router.post("/", [
         console.error(error);
         res.status(500).send("Somer Error Occured");
     }
-})
+});
 
 module.exports = router;

@@ -1,11 +1,13 @@
+require("dotenv").config();
 const express = require("express");
 const { body, validationResult } = require("express-validator");
 const User = require("../models/users");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const router = express.Router();
 
 
-
+const JWT_SECRET = "JAYDENisKing";
 router.post("/", [
     body("email").isEmail(),
     body("password").isLength({ min: 5 })
@@ -21,8 +23,17 @@ router.post("/", [
         const user = User.findOne({ email: email })
         if (user) {
             // comparing passwords
-            const access = await bcrypt.compare(password, user.password);
-            console.log(access);
+            const { id, email, password } = user;
+            const savedPass = password;
+            bcrypt.compare(password, savedPass, (data) => {
+                data = {
+                    user: {
+                        id: id
+                    }
+                }
+                const authToken = jwt.sign(data, JWT_SECRET);
+                res.json({ "authToken": authToken });
+            });
         }
     }
     catch (error) {
