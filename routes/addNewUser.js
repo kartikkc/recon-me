@@ -31,7 +31,8 @@ router.post("/", [
                 {
                     name: name,
                     email: email,
-                    password: newPass
+                    password: newPass,
+                    verified: false
                 }
             )
             const data = {
@@ -40,7 +41,7 @@ router.post("/", [
                 }
             }
             const authToken = jwt.sign(data, JWT_SECRET);
-            res.json({ "status": "Success! User Created!", "authToken": authToken });
+            res.json({ "status": "Success! User Created! Please Continue to Verify your Account", "authToken": authToken });
         }
     }
     catch (error) {

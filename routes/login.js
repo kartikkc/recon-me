@@ -5,7 +5,7 @@ const User = require("../models/users");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
-
+const mailer = require("../mailer");
 
 const JWT_SECRET = "JAYDENisKing";
 router.post("/", [
@@ -23,7 +23,7 @@ router.post("/", [
         const user = User.findOne({ email: email })
         if (user) {
             // comparing passwords
-            const { id, email, password } = user;
+            const { id, email, password, verified } = user;
             const savedPass = password;
             bcrypt.compare(password, savedPass, (data) => {
                 data = {
@@ -31,8 +31,15 @@ router.post("/", [
                         id: id
                     }
                 }
-                const authToken = jwt.sign(data, JWT_SECRET);
-                res.json({ "authToken": authToken });
+                if (verified) {
+                    const authToken = jwt.sign(data, JWT_SECRET);
+                    res.json({ "authToken": authToken });
+                }
+                else {
+                    res.json({ "Verify": "Please verify your account to activate it." });
+                    mailer();
+                }
+
             });
         }
     }
