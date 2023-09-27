@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const User = require("./users");
 const { Schema } = mongoose;
 
 const otpSchema = new Schema({
@@ -7,16 +8,16 @@ const otpSchema = new Schema({
         required: true
     },
     otp: {
-        type: Number,
+        type: String,
         required: true
     },
     date: {
         type: Date,
-        defualt: Date.now()
+        default: Date.now()
     },
     expiry: {
         type: Date,
-        defualt: Date.now() + 360000
+        default: Date.now() + 3600000,
     }
 })
 

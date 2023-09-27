@@ -5,8 +5,12 @@ const User = require("../models/users");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { body, validationResult } = require("express-validator");
-
+const Otp = require("../models/otp");
+const fetchuser = require("../middleware/fetchUser");
+const mailer = require("../mailer");
 const JWT_SECRET = "JAYDENisKing";
+
+
 router.post("/", [
     body("email").isEmail(),
     body("password").isLength({ min: 5 }),
@@ -41,7 +45,25 @@ router.post("/", [
                 }
             }
             const authToken = jwt.sign(data, JWT_SECRET);
-            res.json({ "status": "Success! User Created! Please Continue to Verify your Account", "authToken": authToken });
+            // Create an random otp and save it to DB
+            const RandomOTP = Math.floor(1000 + Math.random() * 9000);
+            // Hashing the OTP and Storing it in the database
+            const OTPString = RandomOTP.toString();
+            console.log(OTPString);
+            const hashedOTP = await bcrypt.hash(OTPString, salt);
+            const getID = user.id;
+            user = await User.findById(getID).select("-password");
+            // res.json(user);
+            if (user) {
+                const OTP = {
+                    userId: getID,
+                    otp: hashedOTP
+                }
+                const OTPsaved = await Otp.create(OTP);
+                console.log(hashedOTP);
+                await mailer(OTPString, req.body.name, req.body.email);
+            }
+            res.json({ "status": "Success! User Created! Please Continue to Verify your Account", "authToken": authToken, "Otp": hashedOTP });
         }
     }
     catch (error) {
@@ -49,5 +71,49 @@ router.post("/", [
         res.status(500).send("Somer Error Occured");
     }
 });
+
+router.post("/verify", body("otp").exists(), fetchuser, async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+        // getting the OTP from the user in the request and comparing it with OTP stored in the DB
+        const getID = req.user.id;
+        const user = await User.findById(getID).select("-password");
+        if (user) {
+            const getOTP = req.body.otp;
+            const convertOTP = getOTP.toString();
+            const storedOTP = await Otp.findOne({ userId: getID });
+            if (storedOTP) {
+                const otpVerification = storedOTP.otp;
+                const verified = await bcrypt.compare(convertOTP, otpVerification);
+                if (verified) {
+                    await User.findByIdAndUpdate(getID, { $set: { "verified": true } });
+                    await Otp.findByIdAndDelete(storedOTP._id);
+                    return res.json({ "status": "verified" });
+                }
+                else {
+                    return res.json({ "status": "Please Enter the correct OTP" });
+                }
+            }
+        }
+        else {
+            return res.send("Please Generate an OTP");
+        }
+        // if (user) {
+        //     // let DateNow = Date.now();
+        //     // if (DateNow >= Otp.expiry) {
+        //     //     res.json({ "error": "OTP expired, Please generate another One." })
+        //     // }
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).send("Somer Error Occured");
+    }
+    res.json({ "status": "Otp checking endpoint!" });
+});
+
 
 module.exports = router;

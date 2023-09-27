@@ -17,16 +17,16 @@ const mailGenerator = new mailgen({
         // Appears in header & footer of e-mails
         name: 'R3C0N-M3',
         link: 'https://github.com/kartikkc/recon-me',
-        // logo: 'https://i.imgur.com/bynWTBo.png'
+        logo: 'https://i.imgur.com/AO4B9WL.png'
     }
 });
 
 
 
-async function main(otp) {
+async function main(otp, name, emailUser) {
     var email = {
         body: {
-            name: 'Kartik',
+            name: name,
             intro: 'Welcome to R3C0N-M3! We\'re very excited to have you on board.',
             action: {
                 instructions: 'To Verify your Account, please enter the OTP on the site:',
@@ -38,13 +38,13 @@ async function main(otp) {
             outro: 'Don\'t Reply to this email. Please generate another OTP from the website.'
         }
     };
-    
+
     // Generate an HTML email with the provided contents
     var emailBody = mailGenerator.generate(email);
 
     const mail = {
         from: "R3C0N-M3",
-        to: "kartikkc95@gmail.com",
+        to: emailUser,
         subject: "Hello",
         text: "hello mailer",
         html: emailBody

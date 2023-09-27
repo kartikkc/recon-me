@@ -20,13 +20,15 @@ router.post("/", [
     // Checking if the User Exists
     try {
         const { email, password } = req.body;
-        const user = User.findOne({ email: email })
+        const receivedPassword = password;
+        const user = await User.findOne({ email: email })
         if (user) {
             // comparing passwords
             const { id, email, password, verified } = user;
             const savedPass = password;
-            bcrypt.compare(password, savedPass, (data) => {
-                data = {
+            const isPasswordMatch = await bcrypt.compare(receivedPassword, savedPass)
+            if (isPasswordMatch) {
+                const data = {
                     user: {
                         id: id
                     }
@@ -37,10 +39,14 @@ router.post("/", [
                 }
                 else {
                     res.json({ "Verify": "Please verify your account to activate it." });
-                    mailer();
+                    console.log(user.verified);
+                    // mailer();
                 }
 
-            });
+            }
+            else {
+                return res.json({ "Error": "Password Mismatch" });
+            }
         }
     }
     catch (error) {
