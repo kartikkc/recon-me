@@ -6,6 +6,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 const mailer = require("../mailer");
+const { OtpGen } = require("./generateOTP");
 
 const JWT_SECRET = "JAYDENisKing";
 router.post("/", [
@@ -21,13 +22,15 @@ router.post("/", [
     try {
         const { email, password } = req.body;
         const receivedPassword = password;
+        const receivedEmail = email;
         const user = await User.findOne({ email: email })
         if (user) {
             // comparing passwords
             const { id, email, password, verified } = user;
             const savedPass = password;
             const isPasswordMatch = await bcrypt.compare(receivedPassword, savedPass)
-            if (isPasswordMatch) {
+            console.log(verified);
+            if (isPasswordMatch) { // Checking if passowrd match
                 const data = {
                     user: {
                         id: id
@@ -38,6 +41,12 @@ router.post("/", [
                     res.json({ "authToken": authToken });
                 }
                 else {
+                    const selectUser = await User.findById(id).select("-password");
+                    if (selectUser) {
+                        const name = selectUser.name;
+                        const generatedOTP = await OtpGen(id);
+                        console.log(generatedOTP);
+                    }
                     res.json({ "Verify": "Please verify your account to activate it." });
                     console.log(user.verified);
                     // mailer();

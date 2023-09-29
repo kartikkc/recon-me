@@ -22,7 +22,8 @@ app.use("/createuser", require("./routes/addNewUser"))
 app.use("/login", require("./routes/login"))
 
 // ROUTE-4: Verify your account with the OTP sent to the mail
-app.use("/verify", require("./routes/otpVerification"))
+// app.use("/verify", require("./routes/otpVerification"))
+
 
 app.listen(PORT, () => {
     console.log("[STATUS] The server is Running on PORT: " + PORT)
