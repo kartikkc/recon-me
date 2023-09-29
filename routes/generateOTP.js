@@ -15,37 +15,11 @@ async function OtpGen(userId) {
         return otpString;
     }
 
-
 }
 
-// async function OtpVerify(userId, otpReceived) {
-//     const storedOtp = await Otp.findOne({ "userId": userId });
-//     if (storedOtp) {
-//         var dateNow = Date.now();
-//         if (storedOtp.expiry < dateNow) {
-//             await Otp.findByIdAndDelete(storedOtp._id);
-//             return ({ "error": "Please generate another Otp" })
-//         }
-//         else {
-//             const Otpfetch = storedOtp.otp;
-//             const verified = await bcrypt.compare(Otpfetch, otpReceived);
-//             if (verified) {
-//                 await User.findByIdAndUpdate(userId, { $set: { "verified": true } });
-//                 await Otp.findByIdAndDelete(storedOtp._id);
-//                 return { "Status": "User verified" };
-//             }
-//             else {
-//                 const Response = "Please Enter the Correct OTP";
-//                 return { "Status": Response };
-//             }
-//         }
-
-//     }
-// }
-
 async function OtpVerify(userId, otpReceived) {
-    const storedOtp = await Otp.findOne({ userId });
-
+    const storedOtp = await Otp.findOne({ "userId": userId });
+    console.log(userId);
     if (!storedOtp) {
         return { error: "OTP not found" };
     }
@@ -56,7 +30,7 @@ async function OtpVerify(userId, otpReceived) {
         await Otp.findByIdAndDelete(storedOtp._id);
         return { error: "OTP expired. Please generate another OTP" };
     }
-
+    console.log(storedOtp.otp);
     const isVerified = await bcrypt.compare(otpReceived, storedOtp.otp);
 
     if (isVerified) {

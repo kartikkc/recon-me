@@ -46,26 +46,11 @@ router.post("/", [
                 }
             }
             const authToken = jwt.sign(data, JWT_SECRET);
-            // // Create an random otp and save it to DB
-            // const RandomOTP = Math.floor(1000 + Math.random() * 9000);
-            // // Hashing the OTP and Storing it in the database
-            // const OTPString = RandomOTP.toString();
-            // console.log(OTPString);
-            // const hashedOTP = await bcrypt.hash(OTPString, salt);
+
             const getID = user.id;
             var otpString = await OtpGen(getID);
             console.log(otpString);
 
-            // user = await User.findById(getID).select("-password");
-            // // res.json(user);
-            // if (user) {
-            //     const OTP = {
-            //         userId: getID,
-            //         otp: hashedOTP
-            //     }
-            //     const OTPsaved = await Otp.create(OTP);
-            // await mailer(OTPString, req.body.name, req.body.email);
-            // }
             res.json({ "status": "Success! User Created! Please Continue to Verify your Account", "authToken": authToken });
         }
     }
@@ -90,41 +75,12 @@ router.post("/verify", body("otp").exists(), fetchuser, async (req, res) => {
         const OtpReceived = await OtpVerify(getID, convertOTP);
         console.log(OtpReceived);
         res.json({ status: OtpReceived })
-        // const storedOTP = await Otp.findOne({ userId: getID });
-        // if (storedOTP) {
-        //     let dateNow = Date.now();
-        //     if (storedOTP.expiry < dateNow) {
-        //         await Otp.findByIdAndDelete(storedOTP._id);
-        //         res.json({ "error": "Please Generate another OTP" });
-        //     }
-        //     else {
-
-        //         const otpVerification = storedOTP.otp;
-        //         const verified = await bcrypt.compare(convertOTP, otpVerification);
-        //         if (verified) {
-        //             await User.findByIdAndUpdate(getID, { $set: { "verified": true } });
-        //             await Otp.findByIdAndDelete(storedOTP._id);
-        //             return res.json({ "status": "verified" });
-        //         }
-        //         else {
-        //             return res.json({ "status": "Please Enter the correct OTP" });
-        //         }
-        //     }
-        // }
-        // else {
-        //     return res.send("Please Generate an OTP");
-        // }
     }
-    // if (user) {
-    //     // let DateNow = Date.now();
-    //     // if (DateNow >= Otp.expiry) {
-    //     //     res.json({ "error": "OTP expired, Please generate another One." })
-    //     // }
+
     catch (error) {
         console.error(error);
         res.status(500).send("Somer Error Occured");
     }
-    // res.json({ "status": "Otp checking endpoint!" });
 });
 
 
