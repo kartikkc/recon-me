@@ -45,11 +45,9 @@ router.post("/", [
                     if (selectUser) {
                         const name = selectUser.name;
                         const generatedOTP = await OtpGen(id);
-                        console.log(generatedOTP);
                         mailer(generatedOTP, name, email);
                     }
                     res.json({ "Verify": "Please verify your account to activate it." });
-                    console.log(user.verified);
                 }
 
             }

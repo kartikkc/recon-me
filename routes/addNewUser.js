@@ -49,7 +49,6 @@ router.post("/", [
 
             const getID = user.id;
             var otpString = await OtpGen(getID);
-            console.log(otpString);
 
             res.json({ "status": "Success! User Created! Please Continue to Verify your Account", "authToken": authToken });
         }
@@ -73,7 +72,6 @@ router.post("/verify", body("otp").exists(), fetchuser, async (req, res) => {
         const getOTP = req.body.otp;
         const convertOTP = getOTP.toString();
         const OtpReceived = await OtpVerify(getID, convertOTP);
-        console.log(OtpReceived);
         res.json({ status: OtpReceived })
     }
 

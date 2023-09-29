@@ -11,7 +11,6 @@ async function OtpGen(userId) {
     const user = await User.findById(userId).select("-password");
     if (user) {
         await Otp.create({ "userId": userId, "otp": hashedOTP });
-        console.log(hashedOTP);
         return otpString;
     }
 
@@ -19,7 +18,6 @@ async function OtpGen(userId) {
 
 async function OtpVerify(userId, otpReceived) {
     const storedOtp = await Otp.findOne({ "userId": userId });
-    console.log(userId);
     if (!storedOtp) {
         return { error: "OTP not found" };
     }
@@ -30,7 +28,6 @@ async function OtpVerify(userId, otpReceived) {
         await Otp.findByIdAndDelete(storedOtp._id);
         return { error: "OTP expired. Please generate another OTP" };
     }
-    console.log(storedOtp.otp);
     const isVerified = await bcrypt.compare(otpReceived, storedOtp.otp);
 
     if (isVerified) {
