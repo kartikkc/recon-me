@@ -37,7 +37,9 @@ router.post("/", [
                     name: name,
                     email: email,
                     password: newPass,
-                    verified: false
+                    verified: false,
+                    googleId: null,
+                    facebookId: null
                 }
             )
             const data = {

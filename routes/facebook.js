@@ -1,61 +1,36 @@
 const express = require("express");
-const Router = express.Router();
+const router = express.Router();
 const passport = require("passport");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const FacebookStrategy = require("passport-facebook").Strategy;
 const session = require("express-session");
 const bodyParser = require("body-parser");
-const jwt = require("jsonwebtoken");
-const { OtpGen } = require("./generateOTP");
+const mongoose = require("mongoose");
 const User = require("../models/users");
-const { SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = process.env;
-Router.use(session({
-    secret: SECRET,
-    resave: false,
-    saveUninitialized: false
-}));
-Router.use(passport.initialize());
-Router.use(passport.session());
-Router.use(bodyParser.json());
-Router.use(bodyParser.urlencoded({ extended: true }));
+const { OtpGen } = require("./generateOTP");
 
 
-passport.serializeUser(function (user, cb) {
-    process.nextTick(function () {
-        return cb(null, {
-            userId: user.id,
-            name: user.username,
-        });
-    });
-});
-
-passport.deserializeUser(function (user, cb) {
-    process.nextTick(function () {
-        return cb(null, user);
-    });
-});
-passport.use(new GoogleStrategy({
-    clientID: GOOGLE_CLIENT_ID,
-    clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:5000/auth/google/verified",
-    userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
+passport.use(new FacebookStrategy({
+    clientID: process.env.FACEBOOK_APP_ID,
+    clientSecret: process.env.FACEBOOK_APP_SECRET,
+    callbackURL: "http://localhost:5000/auth/facebook/verified"
 },
-    async (accessToken, refreshToken, profile, cb) => {
+    async function (accessToken, refreshToken, profile, cb) {
         try {
             const { id, displayName, emails } = profile;
             // Check if the user exists in the database by their Google ID
-            const googleUser = await User.findOne({ googleId: profile.id });
+            const facebookUser = await User.findOne({ facebookId: profile.id });
 
-            if (googleUser) {
+            if (facebookUser) {
                 // User exists, return the user object
-                return cb(null, googleUser);
+                return cb(null, facebookUser);
             } else {
                 // User doesn't exist, create a new user
                 const newUser = new User({
                     name: displayName,
                     email: (emails && emails.length > 0) ? emails[0].value : null,
                     verified: false,
-                    googleId: id,
-                    facebookId: null
+                    googleId: null,
+                    facebookId: id
                 });
 
                 await newUser.save();
@@ -66,11 +41,13 @@ passport.use(new GoogleStrategy({
         } catch (error) {
             return cb(error);
         }
-    }
-));
-Router.get("/auth/google", passport.authenticate('google', { scope: ["profile"] }));
+    }));
 
-Router.get("/auth/google/verified", passport.authenticate('google', { failureRedirect: '/' }),
+router.get('/auth/facebook',
+    passport.authenticate('facebook'));
+
+router.get('/auth/facebook/verified',
+    passport.authenticate('facebook', { failureRedirect: '/login' }),
     async (req, res) => {
         try {
 
@@ -93,7 +70,5 @@ Router.get("/auth/google/verified", passport.authenticate('google', { failureRed
             res.status(500).send("Some Error Occured");
             console.log(error);
         }
-    }
-);
-
-module.exports = Router;
+    });
+module.exports = router;
