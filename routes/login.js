@@ -8,7 +8,7 @@ const router = express.Router();
 const mailer = require("../mailer");
 const { OtpGen } = require("./generateOTP");
 
-const JWT_SECRET = "JAYDENisKing";
+const JWT_SECRET = process.env.JWT_SECRET;
 router.post("/", [
     body("email").isEmail(),
     body("password").isLength({ min: 5 })

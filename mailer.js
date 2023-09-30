@@ -5,8 +5,8 @@ const optVerification = require("./models/otp");
 const config = {
     service: "gmail",
     auth: {
-        user: "r3c0nm3.303@gmail.com",
-        pass: "yopy wnbw xrbp covo"
+        user: process.env.MAILING_EMAIL,
+        pass: process.env.MAILING_PASSWORD
     }
 }
 const transporter = nodemailer.createTransport(config);
