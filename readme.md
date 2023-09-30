@@ -1,4 +1,5 @@
-<img aling="center" src="https://imgur.com/AO4B9WL.png" />
+<!-- <img aling="center" src="https://imgur.com/AO4B9WL.png" /> -->
+<img align="center" src="./Logo/R3C0N-M3-poster.gif"/>
 ## Authentication API 
 ### By kartikkc
 
