@@ -1,13 +1,13 @@
 require("dotenv").config();
 const express = require("express");
 const router = express.Router();
-const User = require("../models/users");
+const User = require(__dirname + "../models/users");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { body, validationResult } = require("express-validator");
 const Otp = require("../models/otp");
-const fetchuser = require("../middleware/fetchUser");
-const mailer = require("../mailer");
+const fetchuser = require(__dirname + "../middleware/fetchUser");
+const mailer = require(__dirname + "../mailer");
 const JWT_SECRET = process.env.JWT_SECRET;
 const { OtpGen, OtpVerify } = require("./generateOTP");
 

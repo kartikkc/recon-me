@@ -5,8 +5,8 @@ const FacebookStrategy = require("passport-facebook").Strategy;
 const session = require("express-session");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const User = require("../models/users");
-const { OtpGen } = require("./generateOTP");
+const User = require(__dirname + "../models/users");
+const { OtpGen } = require(__dirname + "./generateOTP");
 
 
 passport.use(new FacebookStrategy({

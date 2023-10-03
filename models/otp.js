@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const User = require("./users");
+const User = require(__dirname + "./users");
 const { Schema } = mongoose;
 
 const otpSchema = new Schema({

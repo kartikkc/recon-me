@@ -5,8 +5,8 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const session = require("express-session");
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
-const { OtpGen } = require("./generateOTP");
-const User = require("../models/users");
+const { OtpGen } = require(__dirname + "./generateOTP");
+const User = require(__dirname + "../models/users");
 const { SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = process.env;
 Router.use(session({
     secret: SECRET,

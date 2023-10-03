@@ -1,5 +1,5 @@
-const Otp = require("../models/otp");
-const User = require("../models/users");
+const Otp = require(__dirname + "../models/otp");
+const User = require(__dirname + "../models/users");
 const bcrypt = require("bcryptjs");
 
 async function OtpGen(userId) {

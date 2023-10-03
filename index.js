@@ -15,22 +15,22 @@ app.get("/", (req, res) => {
 })
 
 // ROUTE-2: Add a new user to the Database
-app.use("/createuser", require("./routes/addNewUser"))
+app.use("/createuser", require(__dirname + "./routes/addNewUser"))
 
 // ROUTE-3: Login using Native Email and Password
-app.use("/login", require("./routes/login"))
+app.use("/login", require(__dirname + "./routes/login"))
 
 // ROUTE-4: To regenerate the otp and verfiy the account
-app.use("/regenerate", require("./routes/regenOTP"));
+app.use("/regenerate", require(__dirname + "./routes/regenOTP"));
 
 // ROUTE-5: for Google OAuth.
-app.use("/googleLogin", require("./routes/google"));
+app.use("/googleLogin", require(__dirname + "./routes/google"));
 
 // ROUTE-6 : Facebook Oauth login
-app.use("/facebookLogin", require("./routes/facebook"));
+app.use("/facebookLogin", require(__dirname + "./routes/facebook"));
 
 //ROUTE-7 : Verify OTP 
-app.use("/verifyOtp", require("./routes/verifyOtp"));
+app.use("/verifyOtp", require(__dirname + "./routes/verifyOtp"));
 
 app.listen(PORT, () => {
     console.log("[STATUS] The server is Running on PORT: " + PORT)
