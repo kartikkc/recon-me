@@ -8,7 +8,7 @@ app.use(cors());
 
 app.use(express.json());
 const PORT = 5000;
-// connectToMongo();
+connectToMongo();
 //ROUTE-1 : Check the api is up and running
 app.get("/", (req, res) => {
     res.json({ "STATUS": "app working fine" })
