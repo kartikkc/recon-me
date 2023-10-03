@@ -8,6 +8,8 @@ const jwt = require("jsonwebtoken");
 const { OtpGen } = require("./generateOTP");
 const User = require("../models/users");
 const { SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = process.env;
+Router.use(bodyParser.urlencoded({ extended: false }));
+Router.use(bodyParser.json());
 Router.use(session({
     secret: SECRET,
     resave: false,
@@ -15,8 +17,6 @@ Router.use(session({
 }));
 Router.use(passport.initialize());
 Router.use(passport.session());
-Router.use(bodyParser.json());
-Router.use(bodyParser.urlencoded({ extended: true }));
 
 
 passport.serializeUser(function (user, cb) {

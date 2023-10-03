@@ -4,10 +4,12 @@ const { body, validationResult } = require("express-validator");
 const User = require("../models/users");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const bodyParser = require("body-parser");
 const router = express.Router();
 const mailer = require("../mailer");
 const { OtpGen } = require("./generateOTP");
-
+router.use(bodyParser.urlencoded({ extended: false }));
+router.use(bodyParser.json());
 const JWT_SECRET = process.env.JWT_SECRET;
 router.post("/", [
     body("email").isEmail(),

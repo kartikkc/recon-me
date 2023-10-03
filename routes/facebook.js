@@ -7,7 +7,8 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const User = require("../models/users");
 const { OtpGen } = require("./generateOTP");
-
+router.use(bodyParser.urlencoded({ extended: false }));
+router.use(bodyParser.json());
 
 passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_APP_ID,

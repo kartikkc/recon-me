@@ -1,7 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const bodyParser = require("body-parser");
 const { OtpVerify } = require("./generateOTP");
 const User = require("../models/users");
+router.use(bodyParser.urlencoded({ extended: false }));
+router.use(bodyParser.json());
 
 router.post("/", async (req, res) => {
     const googleId = req.header("googleId");
