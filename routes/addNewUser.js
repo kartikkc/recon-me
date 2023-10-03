@@ -11,7 +11,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const { OtpGen, OtpVerify } = require("./generateOTP");
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
-
+router.use(expressValidator());
 router.post("/", [
     body("email").isEmail(),
     body("password").isLength({ min: 5 }),
