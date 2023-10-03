@@ -32,6 +32,6 @@ app.use("/facebookLogin", require(__dirname + "./routes/facebook"));
 //ROUTE-7 : Verify OTP 
 app.use("/verifyOtp", require(__dirname + "./routes/verifyOtp"));
 
-app.listen(PORT, () => {
+app.listen(process.env.PORT || PORT, () => {
     console.log("[STATUS] The server is Running on PORT: " + PORT)
 })
