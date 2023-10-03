@@ -5,9 +5,7 @@ const User = require("../models/users");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { body, validationResult } = require("express-validator");
-const Otp = require("../models/otp");
 const fetchuser = require("../middleware/fetchUser");
-const mailer = require("../mailer");
 const JWT_SECRET = process.env.JWT_SECRET;
 const { OtpGen, OtpVerify } = require("./generateOTP");
 
