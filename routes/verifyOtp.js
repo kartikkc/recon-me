@@ -3,6 +3,8 @@ const router = express.Router();
 const bodyParser = require("body-parser");
 const { OtpVerify } = require("./generateOTP");
 const User = require("../models/users");
+const jwt = require("jsonwebtoken");
+const JWT_SECRET = process.env.JWT_SECRET;
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
@@ -18,7 +20,11 @@ router.post("/", async (req, res) => {
             const userID = getID._id;
             // res.json(req.body.otp);
             const response = await OtpVerify(userID, otp);
-            res.json(response);
+            data = {
+                id: getID._id
+            }
+            const authToken = await jwt.sign(data, JWT_SECRET);
+            res.json(response, "auth-token": authToken);
         }
     }
     else {

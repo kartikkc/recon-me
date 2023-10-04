@@ -164,7 +164,10 @@ javascript:
 #### Response
 
 ```js
-{
-    "auth":""
+{	
+    "status":	"not verified"
+    "otp":	"3043"
 }
 ```
+
+#### Verifying account created using google login
