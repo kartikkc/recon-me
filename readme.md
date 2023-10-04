@@ -171,3 +171,43 @@ javascript:
 ```
 
 #### Verifying account created using google login
+
+```js
+POST https://recon-me.vercel.app/verifyOtp
+```
+
+#### Body :
+
+| Parameter  | Type     | Description                                |
+| :--------- | :------- | :------------------------------------------|
+| `otp`      | `Integer`| **Required** Password                      |
+
+*setting the googleId as a header to the request
+
+
+#### Usage
+
+javascript:
+
+```js
+const googleUserVerify = await fetch(`https://recon-me.vercel.app/verifyOtp`, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({otp: otp.otp})
+});
+const json = await googleUserVerify.json();
+console.log(json);
+```
+
+#### Response
+
+```js
+{
+  "status": {
+    "status": "User Verified"
+  },
+  "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MWQ4Mjg5NGI2NTU2MDAwODU0ZDE3ZCIsImlhdCI6MTY5NjQzMjc5MH0.bhNc0fuzPYhqw2nCm8C6SE1s31q5AWsiUmLTf7HBtco"
+}
+```
