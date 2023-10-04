@@ -51,7 +51,7 @@ console.log(json);
 ```javascript
 {
   "status": "Success! User Created! Please Continue to Verify your Account",
-  "authToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjUxZDZkNDc4N2RhMDcwMDA4MDM4YWQ4In0sImlhdCI6MTY5NjQyNzMzNX0.NMzkynrn7fmZuO1HBkOtBsaWIyzM0dq_MaB0Lft5WPA"
+  "authToken": "esJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjUxZDZkNDc4N2RhMDcwMDA4MDM4YWQ4In0sImlhdCI6MTY5NjQyNzMzNX0.NMzkynrn7fmZuO1HBkOtBsaWIyzM0dq_MaB0Lft5WPA"
 }
 ```
 
@@ -85,4 +85,86 @@ const verfiyNewUser = await fetch(`https://recon-me.vercel.app/createuser/verify
 });
 const json = await verifyNewUser.json();
 console.log(json);
+```
+
+#### Response
+
+```js
+{
+  "status": {
+    "status": "User Verified"
+  }
+}
+```
+
+### Log-In
+
+#### Using Email
+
+```js
+POST https://recon-me.vercel.app/login
+```
+
+#### Body :
+
+| Parameter  | Type     | Description                                |
+| :--------- | :------- | :------------------------------------------|
+| `email`    | `string` | **Required** Email Address                 |
+| `password` | `string` | **Required** Password                      |
+
+#### Usage
+
+javascript:
+
+```javascript
+const userLogin = await fetch(`https://recon-me.vercel.app/login`, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({email: credentials.email, password: credentials.password})
+});
+const json = await userLogin.json();
+console.log(json);
+```
+
+#### Response
+
+If the user is not verified : 
+
+```javascript
+{
+  "Verify": "Please verify your account to activate it."
+}
+```
+
+After verifying using OTP:
+
+```javascript
+{
+  "authToken": "exJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjUxZDZkNDc4N2RhMDcwMDA4MDM4YWQ4In0sImlhdCI6MTY5NjQyNzMzNX0.NMzkynrn7fmZuO1HBkOtBsaWIyzM0dq_MaB0Lft5WPA"
+}
+```
+
+### Authentication with Google
+
+
+```js
+GET https://recon-me.vercel.app/googleLogin/auth/google
+```
+
+#### Usage
+
+javascript:
+
+```javascript
+<a href='https://recon-me.vercel.app/googleLogin/auth/google' target='_blank'>Continue with Google</Link>
+```
+
+#### Response
+
+```js
+{
+    "auth":""
+}
 ```
