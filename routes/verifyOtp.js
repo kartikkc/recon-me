@@ -24,7 +24,7 @@ router.post("/", async (req, res) => {
                 id: getID._id
             }
             const authToken = await jwt.sign(data, JWT_SECRET);
-            res.json(response, "auth-token": authToken);
+            res.json(response, { "auth-token": authToken });
         }
     }
     else {
