@@ -10,6 +10,7 @@ const expressValidator = require("express-validator");
 const fetchuser = require("../middleware/fetchUser");
 const JWT_SECRET = process.env.JWT_SECRET;
 const { OtpGen, OtpVerify } = require("./generateOTP");
+const mailer = require("../mailer");
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 router.post("/", [
@@ -51,7 +52,7 @@ router.post("/", [
 
             const getID = user.id;
             var otpString = await OtpGen(getID);
-
+            mailer(otpString, name, email);
             res.json({ "status": "Success! User Created! Please Continue to Verify your Account", "authToken": authToken });
         }
     }

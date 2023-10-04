@@ -49,8 +49,14 @@ async function main(otp, name, emailUser) {
         text: "hello mailer",
         html: emailBody
     };
-    const sendmail = await transporter.sendMail(mail);
-    console.log("message sent: " + sendmail.id);
+    try {
+
+        const sendmail = await transporter.sendMail(mail);
+        console.log("message sent: " + sendmail.id);
+    }
+    catch (error) {
+        console.log(error);
+    }
 
 }
 
