@@ -52,7 +52,7 @@ router.post("/", [
 
             const getID = user.id;
             var otpString = await OtpGen(getID);
-            mailer(otpString, name, email);
+            await mailer(otpString, name, email);
             res.json({ "status": "Success! User Created! Please Continue to Verify your Account", "authToken": authToken });
         }
     }
