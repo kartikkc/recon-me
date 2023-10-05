@@ -11,7 +11,7 @@ const PORT = 5000;
 connectToMongo();
 //ROUTE-1 : Check the api is up and running
 app.get("/", (req, res) => {
-    res.redirect("https://recon-me-docs.vercel.app");
+    res.redirect("https://recon-me-doc.vercel.app");
     console.log({ "STATUS": "app working fine" })
 })
 
