@@ -4,6 +4,10 @@
 # R3C0N-M3: Authentication API 
 Your Gateway to Secure Access
 
+**Website : https://recon-me.vercel.app**
+
+**Docs : https://recon-me-doc.vercel.app**
+
 
 ## Features
 - Signup Using Email and generation of JWT token.
