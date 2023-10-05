@@ -70,7 +70,7 @@ passport.use(new GoogleStrategy({
 ));
 Router.get("/auth/google", passport.authenticate('google', { scope: ["profile"] }));
 
-Router.get("/auth/google/verified", passport.authenticate('google', { failureRedirect: '/' }),
+Router.get("/auth/google/verified", passport.authenticate('google', { failureRedirect: '/signup' }),
     async (req, res) => {
         try {
 
