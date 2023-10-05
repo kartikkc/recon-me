@@ -11,7 +11,8 @@ const PORT = 5000;
 connectToMongo();
 //ROUTE-1 : Check the api is up and running
 app.get("/", (req, res) => {
-    res.json({ "STATUS": "app working fine" })
+    res.redirect("https://recon-me-docs.vercel.app");
+    console.log({ "STATUS": "app working fine" })
 })
 
 // ROUTE-2: Add a new user to the Database
