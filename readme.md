@@ -211,3 +211,11 @@ console.log(json);
   "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MWQ4Mjg5NGI2NTU2MDAwODU0ZDE3ZCIsImlhdCI6MTY5NjQzMjc5MH0.bhNc0fuzPYhqw2nCm8C6SE1s31q5AWsiUmLTf7HBtco"
 }
 ```
+
+## Support
+For any issue or query. Contact me at : r3c0nm3.303@gmail.com
+
+Contribute to this API <a href="https://github.com/kartikkc/recon-me">here</a>
+
+## Contact me
+<a href = "https://www.github.com/kartikkc/" target="_blank"><img src="https://img.icons8.com/fluent/48/000000/github.png"/></a><a href = "https://www.linkedin.com/in/kartikkc397/" target="_blank"><img src="https://img.icons8.com/fluent/48/000000/linkedin.png"/></a><a href = "mailto:kartikkc95@gmail.com" target="_blank"><img src="https://img.icons8.com/fluent/48/000000/gmail.png"/></a>
