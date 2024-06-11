@@ -41,7 +41,7 @@ passport.deserializeUser(function (user, cb) {
 passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:5000/googleLogin/auth/google/verified",
+    callbackURL: "https://recon-me.vercel.app/googleLogin/auth/google/verified",
     userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo",
     scope: ["profile", "email"]
 },
