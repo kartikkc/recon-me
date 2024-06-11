@@ -47,9 +47,8 @@ passport.use(new GoogleStrategy({
 },
     async (accessToken, refreshToken, profile, cb) => {
         try {
-            const { id, displayName} = profile;
-            const email = profile._json.email;
-            console.log(profile);
+            const { id, name, email} = profile._json;
+            console.log(email);
             // Check if the user exists in the database by their Google ID
             const googleUser = await User.findOne({ googleId: profile.id });
             if (googleUser) {
@@ -58,7 +57,7 @@ passport.use(new GoogleStrategy({
             } else {
                 // User doesn't exist, create a new user
                 const newUser = new User({
-                    name: displayName,
+                    name: name,
                     email: email,
                     verified: false,
                     googleId: id,
