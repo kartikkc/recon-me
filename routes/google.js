@@ -99,7 +99,7 @@ Router.get("/auth/google/verified", passport.authenticate('google', { failureRed
                     "email": email,
                     "Message": "Otp Sent Successfully"
                 });
-                // console.log(name, email);
+                console.log(name, email);
             }
         }
         catch (error) {
