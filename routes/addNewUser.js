@@ -1,3 +1,4 @@
+// Importing the necessary Packages
 require("dotenv").config();
 const express = require("express");
 const router = express.Router();
@@ -11,9 +12,41 @@ const fetchuser = require("../middleware/fetchUser");
 const JWT_SECRET = process.env.JWT_SECRET;
 const { OtpGen, OtpVerify } = require("./generateOTP");
 const mailer = require("../mailer");
+// Setting the necessary things up
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
-router.post("/", [
+
+// Getting the email of the user before signing-up to make it unique and for signing-up with google.
+router.post("/", [body("email").isEmail()], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    try {
+        const { email } = req.body;
+        let user = await User.findOne({email: email});
+        if (user) {
+            return res.status(400).json({ error: "Email Already Exists, Please Sign-in" });
+        }
+        else {
+            user = await User.create({
+                email: email,
+                verified: false
+            });
+            const getID = user.id;
+            var otpString = await OtpGen(getID);
+            await mailer(otpString, email, email);
+            // res.json({ Otp: otpString });
+            // res.redirect("")
+        }
+    }
+    catch (error) {
+        console.error(error);
+    }
+})
+// Creating the new request handler: ( For creating new user)
+router.post("/add", [
+    // Checking the request for everything necssary
     body("email").isEmail(),
     body("password").isLength({ min: 5 }),
     body("name").isLength({ min: 5 })
@@ -30,6 +63,7 @@ router.post("/", [
         if (user) {
             return res.status(400).json({ error: "Email Already Exists, Please Sign-in" });
         }
+        // Creating the new User
         else {
             const salt = await bcrypt.genSalt(10);
             const newPass = await bcrypt.hash(password, salt);
@@ -86,5 +120,8 @@ router.post("/verify", body("otp").exists(), fetchuser, async (req, res) => {
 
 
 module.exports = router;
+
+
+
 
 

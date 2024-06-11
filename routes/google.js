@@ -1,3 +1,4 @@
+// Importing Packages
 const express = require("express");
 const Router = express.Router();
 const passport = require("passport");
@@ -7,9 +8,13 @@ const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const { OtpGen } = require("./generateOTP");
 const User = require("../models/users");
+const mailer = require("../mailer");
+const otp = require("../models/otp");
 const { SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = process.env;
+// Setting up BodyParser
 Router.use(bodyParser.urlencoded({ extended: false }));
 Router.use(bodyParser.json());
+// Setting up passport and session package
 Router.use(session({
     secret: SECRET,
     resave: false,
@@ -36,15 +41,16 @@ passport.deserializeUser(function (user, cb) {
 passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: "https://recon-me.vercel.app/googleLogin/auth/google/verified",
-    userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
+    callbackURL: "http://localhost:5000/googleLogin/auth/google/verified",
+    userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo",
+    scope: ["profile", "email"]
 },
     async (accessToken, refreshToken, profile, cb) => {
         try {
-            const { id, displayName, emails } = profile;
+            const { id, displayName} = profile;
+            const email = profile._json.email;
             // Check if the user exists in the database by their Google ID
             const googleUser = await User.findOne({ googleId: profile.id });
-
             if (googleUser) {
                 // User exists, return the user object
                 return cb(null, googleUser);
@@ -52,7 +58,7 @@ passport.use(new GoogleStrategy({
                 // User doesn't exist, create a new user
                 const newUser = new User({
                     name: displayName,
-                    email: (emails && emails.length > 0) ? emails[0].value : null,
+                    email: email,
                     verified: false,
                     googleId: id,
                     facebookId: null
@@ -68,12 +74,11 @@ passport.use(new GoogleStrategy({
         }
     }
 ));
-Router.get("/auth/google", passport.authenticate('google', { scope: ["profile"] }));
+Router.get("/auth/google", passport.authenticate('google', { scope: ["profile", "email"] }));
 
 Router.get("/auth/google/verified", passport.authenticate('google', { failureRedirect: '/signup' }),
     async (req, res) => {
         try {
-
             if (req.user.verified) {
                 const data = {
                     user: {
@@ -85,8 +90,16 @@ Router.get("/auth/google/verified", passport.authenticate('google', { failureRed
             }
             else {
                 const userId = req.user._id;
+                const { name, email } = req.user;
                 const Otpgen = await OtpGen(userId);
-                res.json({ status: "not verified", "otp": Otpgen });
+                await mailer(Otpgen, name, email);   
+                res.json({
+                    status: "not verified",
+                    "name": name,
+                    "email": email,
+                    "Message": "Otp Sent Successfully"
+                });
+                // console.log(name, email);
             }
         }
         catch (error) {

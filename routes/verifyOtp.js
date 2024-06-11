@@ -20,11 +20,16 @@ router.post("/", async (req, res) => {
             const userID = getID._id;
             // res.json(req.body.otp);
             const response = await OtpVerify(userID, otp);
-            data = {
-                id: getID._id
+            if (response.error =="Incorrect OTP") {
+                res.json({ Status: response });
             }
-            const authToken = await jwt.sign(data, JWT_SECRET);
-            res.json({ "status": response, "auth-token": authToken });
+            else {
+                data = {
+                    id: getID._id
+                }
+                const authToken = await jwt.sign(data, JWT_SECRET);
+                res.json({ "status": response, "auth-token": authToken });
+            }
         }
     }
     else {

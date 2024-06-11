@@ -52,7 +52,7 @@ async function main(otp, name, emailUser) {
     try {
 
         const sendmail = await transporter.sendMail(mail);
-        console.log("message sent: " + sendmail.id);
+        console.log("message sent: " + sendmail.accepted);
     }
     catch (error) {
         console.log(error);
