@@ -48,7 +48,6 @@ passport.use(new GoogleStrategy({
     async (accessToken, refreshToken, profile, cb) => {
         try {
             const { id, name, email} = profile._json;
-            console.log(email);
             // Check if the user exists in the database by their Google ID
             const googleUser = await User.findOne({ googleId: profile.id });
             if (googleUser) {
@@ -91,7 +90,6 @@ Router.get("/auth/google/verified", passport.authenticate('google', { failureRed
             else {
                 const userId = req.user._id;
                 const { name, email } = req.user;
-                console.log(req.user);
                 const Otpgen = await OtpGen(userId);
                 await mailer(Otpgen, name, email);   
                 res.json({
@@ -100,7 +98,6 @@ Router.get("/auth/google/verified", passport.authenticate('google', { failureRed
                     "email": email,
                     "Message": "Otp Sent Successfully"
                 });
-                console.log(name, email);
             }
         }
         catch (error) {
