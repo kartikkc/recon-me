@@ -91,6 +91,7 @@ Router.get("/auth/google/verified", passport.authenticate('google', { failureRed
             else {
                 const userId = req.user._id;
                 const { name, email } = req.user;
+                console.log(req.user.email);
                 const Otpgen = await OtpGen(userId);
                 await mailer(Otpgen, name, email);   
                 res.json({
