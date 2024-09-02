@@ -8,10 +8,7 @@ const connectToMongo = () => {
     //     useNewUrlParser: true,
     //     useUnifiedTopology: true,
     // })
-        mongoose.connect(mongoURL, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    })
+        mongoose.connect(mongoURL)
         .then(
             console.log("[STATUS] Connected To The Database")
         ).catch(error => console.error(error));
