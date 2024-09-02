@@ -55,7 +55,7 @@ console.log(json);
 ```javascript
 {
   "status": "Success! User Created! Please Continue to Verify your Account",
-  "authToken": "esJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjUxZDZkNDc4N2RhMDcwMDA4MDM4YWQ4In0sImlhdCI6MTY5NjQyNzMzNX0.NMzkynrn7fmZuO1HBkOtBsaWIyzM0dq_MaB0Lft5WPA"
+  "auth-token": "esJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjUxZDZkNDc4N2RhMDcwMDA4MDM4YWQ4In0sImlhdCI6MTY5NjQyNzMzNX0.NMzkynrn7fmZuO1HBkOtBsaWIyzM0dq_MaB0Lft5WPA"
 }
 ```
 
