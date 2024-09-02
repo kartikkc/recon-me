@@ -17,35 +17,35 @@ router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
 // Getting the email of the user before signing-up to make it unique and for signing-up with google.
-router.post("/", [body("email").isEmail()], async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-    try {
-        const { email } = req.body;
-        let user = await User.findOne({email: email});
-        if (user) {
-            return res.status(400).json({ error: "Email Already Exists, Please Sign-in" });
-        }
-        else {
-            user = await User.create({
-                email: email,
-                verified: false
-            });
-            const getID = user.id;
-            var otpString = await OtpGen(getID);
-            await mailer(otpString, email, email);
-            // res.json({ Otp: otpString });
-            // res.redirect("")
-        }
-    }
-    catch (error) {
-        console.error(error);
-    }
-})
+// router.post("/", [body("email").isEmail()], async (req, res) => {
+//     const errors = validationResult(req);
+//     if (!errors.isEmpty()) {
+//         return res.status(400).json({ errors: errors.array() });
+//     }
+//     try {
+//         const { email } = req.body;
+//         let user = await User.findOne({email: email});
+//         if (user) {
+//             return res.status(400).json({ error: "Email Already Exists, Please Sign-in" });
+//         }
+//         else {
+//             user = await User.create({
+//                 email: email,
+//                 verified: false
+//             });
+//             const getID = user.id;
+//             var otpString = await OtpGen(getID);
+//             await mailer(otpString, email, email);
+//             // res.json({ Otp: otpString });
+//             // res.redirect("")
+//         }
+//     }
+//     catch (error) {
+//         console.error(error);
+//     }
+// })
 // Creating the new request handler: ( For creating new user)
-router.post("/add", [
+router.post("/", [
     // Checking the request for everything necssary
     body("email").isEmail(),
     body("password").isLength({ min: 5 }),
