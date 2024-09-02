@@ -41,7 +41,7 @@ passport.deserializeUser(function (user, cb) {
 passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: "https://recon-me.vercel.app/googleLogin/auth/google/verified",
+    callbackURL: "http://localhost:5001/googleLogin/auth/google/verified",
     userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo",
     scope: ["profile", "email"]
 },
@@ -64,7 +64,6 @@ passport.use(new GoogleStrategy({
                 });
 
                 await newUser.save();
-
                 // Return the new user object
                 return cb(null, newUser);
             }
@@ -90,12 +89,10 @@ Router.get("/auth/google/verified", passport.authenticate('google', { failureRed
             else {
                 const userId = req.user._id;
                 const { name, email } = req.user;
-                const Otpgen = await OtpGen(userId);
-                await mailer(Otpgen, name, email);   
+                // const Otpgen = await OtpGen(userId);
+                // await mailer(Otpgen, name, email);   
                 res.json({
                     status: "not verified",
-                    "name": name,
-                    "email": email,
                     "Message": "Otp Sent Successfully"
                 });
             }
