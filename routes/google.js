@@ -49,7 +49,7 @@ passport.use(new GoogleStrategy({
         try {
             const { id, name, email} = profile._json;
             // Check if the user exists in the database by their Google ID
-            const googleUser = await User.findOne({ googleId: profile.id });
+            const googleUser = await User.findOne({ email: profile.email });
             if (googleUser) {
                 // User exists, return the user object
                 return cb(null, googleUser);
