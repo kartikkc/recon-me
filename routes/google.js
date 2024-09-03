@@ -53,8 +53,9 @@ passport.use(new GoogleStrategy({
             if (googleUser) {
                 // User exists, return the user object
                 googleUser.googleId = profile.id;
-                googleUser.save();
+                await googleUser.save();
                 console.log(googleUser);
+                console.log(googleUser.googleId);
                 return cb(null, googleUser);
             } else {
                 // User doesn't exist, create a new user
