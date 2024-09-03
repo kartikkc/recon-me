@@ -1,4 +1,5 @@
 // Importing Packages
+require("dotenv").config();
 const express = require("express");
 const Router = express.Router();
 const passport = require("passport");
@@ -47,11 +48,12 @@ passport.use(new GoogleStrategy({
 },
     async (accessToken, refreshToken, profile, cb) => {
         try {
-            const { id, name, email} = profile._json;
+            const { id, name, email } = profile._json;
             // Check if the user exists in the database by their Google ID
             const googleUser = await User.findOne({ googleId: profile.id });
             if (googleUser) {
                 // User exists, return the user object
+                console.log(googleUser);
                 return cb(null, googleUser);
             } else {
                 // User doesn't exist, create a new user
@@ -62,8 +64,10 @@ passport.use(new GoogleStrategy({
                     googleId: id,
                     facebookId: null
                 });
-
-                await newUser.save();
+                console.log(newUser);
+                await newUser.save().then(
+                    console.log("[Status] New User Saved")
+                ).catch(error => console.error(error));
                 // Return the new user object
                 return cb(null, newUser);
             }
@@ -89,10 +93,13 @@ Router.get("/auth/google/verified", passport.authenticate('google', { failureRed
             else {
                 const userId = req.user._id;
                 const { name, email } = req.user;
-                // const Otpgen = await OtpGen(userId);
+                const Otpgen = await OtpGen(userId);
                 // await mailer(Otpgen, name, email);   
                 res.json({
+                    name: name,
+                    email: email,
                     status: "not verified",
+                    "otp": Otpgen,
                     "Message": "Otp Sent Successfully"
                 });
             }
