@@ -61,7 +61,7 @@ passport.use(new GoogleStrategy({
                     name: name,
                     email: email,
                     verified: false,
-                    googleId: id,
+                    googleId: profile.id,
                     facebookId: null
                 });
                 await newUser.save().then(
@@ -92,14 +92,14 @@ Router.get("/auth/google/verified", passport.authenticate('google', { failureRed
             }
             else {
                 const userId = req.user._id;
-                const { name, email } = req.user;
+                const { name, email, googleId } = req.user;
                 const Otpgen = await OtpGen(userId);
                 await mailer(Otpgen, name, email);   
                 res.json({
                     status: "not verified",
                     "name": name,
                     "email": email,
-                    googleId: profile.googleId,
+                    googleId: googleId,
                     "Message": "Otp Sent Successfully"
                 });
             }
