@@ -42,7 +42,7 @@ passport.deserializeUser(function (user, cb) {
 passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:5001/googleLogin/auth/google/verified",
+    callbackURL: "https://recon-me.vercel.app/googleLogin/auth/google/verified",
     userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo",
     scope: ["profile", "email"]
 },
@@ -50,10 +50,11 @@ passport.use(new GoogleStrategy({
         try {
             const { id, name, email } = profile._json;
             // Check if the user exists in the database by their Google ID
-            const googleUser = await User.findOne({ googleId: profile.id });
+            const googleUser = await User.findOne({ email: email });
             if (googleUser) {
                 // User exists, return the user object
-                console.log(googleUser);
+                googleUser.googleId = profile.id;
+                await googleUser.save();
                 return cb(null, googleUser);
             } else {
                 // User doesn't exist, create a new user
@@ -61,12 +62,11 @@ passport.use(new GoogleStrategy({
                     name: name,
                     email: email,
                     verified: false,
-                    googleId: id,
+                    googleId: profile.id,
                     facebookId: null
                 });
-                console.log(newUser);
                 await newUser.save().then(
-                    console.log("[Status] New User Saved")
+                console.log("[Status] New User Saved")
                 ).catch(error => console.error(error));
                 // Return the new user object
                 return cb(null, newUser);
@@ -92,13 +92,14 @@ Router.get("/auth/google/verified", passport.authenticate('google', { failureRed
             }
             else {
                 const userId = req.user._id;
-                const { name, email } = req.user;
+                const { name, email, googleId } = req.user;
                 const Otpgen = await OtpGen(userId);
-                // await mailer(Otpgen, name, email);   
+                await mailer(Otpgen, name, email);   
                 res.json({
                     name: name,
                     email: email,
                     status: "not verified",
+                    googleId: googleId,
                     "otp": Otpgen,
                     "Message": "Otp Sent Successfully"
                 });
