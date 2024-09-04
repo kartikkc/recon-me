@@ -49,13 +49,11 @@ passport.use(new GoogleStrategy({
         try {
             const { id, name, email} = profile._json;
             // Check if the user exists in the database by their Google ID
-            const googleUser = await User.findOne({ email: profile.email });
+            const googleUser = await User.findOne({ email: email });
             if (googleUser) {
                 // User exists, return the user object
                 googleUser.googleId = profile.id;
                 await googleUser.save();
-                console.log(googleUser);
-                console.log(googleUser.googleId);
                 return cb(null, googleUser);
             } else {
                 // User doesn't exist, create a new user
@@ -66,7 +64,8 @@ passport.use(new GoogleStrategy({
                     googleId: id,
                     facebookId: null
                 });
-
+                console.log("[Status] New User Saved")
+                ).catch(error => console.error(error));
                 await newUser.save();
 
                 // Return the new user object
@@ -100,6 +99,7 @@ Router.get("/auth/google/verified", passport.authenticate('google', { failureRed
                     status: "not verified",
                     "name": name,
                     "email": email,
+                    googleId: googleId,
                     "Message": "Otp Sent Successfully"
                 });
             }
