@@ -64,9 +64,9 @@ passport.use(new GoogleStrategy({
                     googleId: id,
                     facebookId: null
                 });
+                await newUser.save().then(
                 console.log("[Status] New User Saved")
                 ).catch(error => console.error(error));
-                await newUser.save();
 
                 // Return the new user object
                 return cb(null, newUser);
