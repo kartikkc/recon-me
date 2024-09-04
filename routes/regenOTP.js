@@ -1,4 +1,5 @@
 const express = require("express");
+const mailer = require("../mailer");
 const router = express.Router();
 const { OtpGen } = require("./generateOTP");
 const User = require("../models/users");
