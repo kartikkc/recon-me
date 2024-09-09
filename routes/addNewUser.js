@@ -49,7 +49,8 @@ router.post("/", [
     // Checking the request for everything necssary
     body("email").isEmail(),
     body("password").isLength({ min: 5 }),
-    body("name").isLength({ min: 5 })
+    body("fname").isLength({ min: 5 }),
+    body("lname").isLength({ min: 3 }),
 ], async (req, res) => {
     // Checking for bad request
     const errors = validationResult(req);
@@ -58,7 +59,7 @@ router.post("/", [
     }
     // Checking for already existing user
     try {
-        const { name, email, password } = req.body;
+        const { fname, lname, email, password } = req.body;
         let user = await User.findOne({ email: email });
         if (user) {
             return res.status(400).json({ error: "Email Already Exists, Please Sign-in" });
@@ -69,7 +70,8 @@ router.post("/", [
             const newPass = await bcrypt.hash(password, salt);
             user = await User.create(
                 {
-                    name: name,
+                    fname: fname,
+                    lname: lname,
                     email: email,
                     password: newPass,
                     verified: false,
@@ -86,7 +88,7 @@ router.post("/", [
 
             const getID = user.id;
             var otpString = await OtpGen(getID);
-            await mailer(otpString, name, email);
+            await mailer(otpString, fname, email);
             res.json({ "status": "Success! User Created! Please Continue to Verify your Account", "authToken": authToken });
         }
     }

@@ -3,9 +3,12 @@ const findOrCreatePlugin = require("mongoose-findorcreate");
 const findOrCreate = require("mongoose-findorcreate");
 const { Schema } = mongoose;
 const UserSchema = new Schema({
-    name: {
+    fname: {
         type: String,
         // required: true
+    },
+    lname: {
+        type: String,
     },
     email: {
         type: String,

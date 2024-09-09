@@ -42,13 +42,13 @@ passport.deserializeUser(function (user, cb) {
 passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: "https://recon-me.vercel.app/googleLogin/auth/google/verified",
+    callbackURL: "http://localhost:5001/googleLogin/auth/google/verified",
     userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo",
     scope: ["profile", "email"]
 },
     async (accessToken, refreshToken, profile, cb) => {
         try {
-            const { id, name, email } = profile._json;
+            const { id, given_name, family_name, email } = profile._json;
             // Check if the user exists in the database by their Google ID
             const googleUser = await User.findOne({ email: email });
             if (googleUser) {
@@ -59,14 +59,15 @@ passport.use(new GoogleStrategy({
             } else {
                 // User doesn't exist, create a new user
                 const newUser = new User({
-                    name: name,
+                    fname: given_name,
+                    lname: family_name,
                     email: email,
                     verified: false,
                     googleId: profile.id,
                     facebookId: null
                 });
                 await newUser.save().then(
-                console.log("[Status] New User Saved")
+                    console.log("[Status] New User Saved")
                 ).catch(error => console.error(error));
                 // Return the new user object
                 return cb(null, newUser);
@@ -94,7 +95,7 @@ Router.get("/auth/google/verified", passport.authenticate('google', { failureRed
                 const userId = req.user._id;
                 const { name, email, googleId } = req.user;
                 const Otpgen = await OtpGen(userId);
-                await mailer(Otpgen, name, email);   
+                // await mailer(Otpgen, name, email);
                 res.json({
                     name: name,
                     email: email,

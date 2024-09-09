@@ -1,4 +1,5 @@
 const express = require("express");
+const mailer = require("../mailer");
 const router = express.Router();
 const { OtpGen } = require("./generateOTP");
 const User = require("../models/users");
@@ -13,7 +14,9 @@ router.post("/", async (req, res) => {
         else {
             const userID = getID._id;
             const response = await OtpGen(userID);
-            res.json(response);
+            await mailer(response, getID.name, getID.email);
+            // res.json(response);
+            res.status(200).json({Message:"Otp Sent on "+getID.email});
         }
     }
     else {
