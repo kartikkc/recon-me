@@ -13,10 +13,11 @@ router.post("/", async (req, res) => {
         }
         else {
             const userID = getID._id;
-            const response = await OtpGen(userID);
-            await mailer(response, getID.name, getID.email);
+            // const response = await OtpGen(userID);
             // res.json(response);
-            res.status(200).json({Message:"Otp Sent on "+getID.email});
+             const response = await OtpGen(userID);
+             await mailer(response, getID.fname, getID.email);
+             res.status(200).json({Message:"Otp Sent on "+getID.email});
         }
     }
     else {

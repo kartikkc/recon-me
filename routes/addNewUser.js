@@ -81,7 +81,9 @@ router.post("/", [
             )
             const data = {
                 user: {
-                    id: user.id
+                    id: user.id,
+                    fname: user.fname,
+                    lname: user.lname,
                 }
             }
             const authToken = jwt.sign(data, JWT_SECRET);

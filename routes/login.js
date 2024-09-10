@@ -28,14 +28,16 @@ router.post("/", [
         const user = await User.findOne({ email: email })
         if (user) {
             // comparing passwords
-            const { id, email, password, verified } = user;
+            const { id, fname, lname, email, password, verified } = user;
             const savedPass = password;
             const isPasswordMatch = await bcrypt.compare(receivedPassword, savedPass)
             console.log(verified);
             if (isPasswordMatch) { // Checking if passowrd match
                 const data = {
                     user: {
-                        id: id
+                        id: id,
+                        fname: fname,
+                        lname: lname
                     }
                 }
                 if (verified) {
@@ -45,9 +47,9 @@ router.post("/", [
                 else {
                     const selectUser = await User.findById(id).select("-password");
                     if (selectUser) {
-                        const name = selectUser.name;
+                        const fname = selectUser.fname;
                         const generatedOTP = await OtpGen(id);
-                        mailer(generatedOTP, name, email);
+                        mailer(generatedOTP, fname, email);
                     }
                     res.json({ "Verify": "Please verify your account to activate it." });
                 }

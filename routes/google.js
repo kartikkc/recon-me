@@ -69,6 +69,7 @@ passport.use(new GoogleStrategy({
                 await newUser.save().then(
                     console.log("[Status] New User Saved")
                 ).catch(error => console.error(error));
+
                 // Return the new user object
                 return cb(null, newUser);
             }
@@ -85,7 +86,9 @@ Router.get("/auth/google/verified", passport.authenticate('google', { failureRed
             if (req.user.verified) {
                 const data = {
                     user: {
-                        id: req.user._id
+                        id: req.user._id,
+                        fname: req.user.fname,
+                        lname: req.user.lname
                     }
                 }
                 const authToken = jwt.sign(data, process.env.JWT_SECRET);
@@ -93,15 +96,17 @@ Router.get("/auth/google/verified", passport.authenticate('google', { failureRed
             }
             else {
                 const userId = req.user._id;
-                const { name, email, googleId } = req.user;
+                const { fname, lname, email, googleId } = req.user;
                 const Otpgen = await OtpGen(userId);
                 // await mailer(Otpgen, name, email);
                 res.json({
-                    name: name,
+                    fname: fname,
+                    lname: lname,
                     email: email,
                     status: "not verified",
+                    "name": fname+" "+lname,
+                    "email": email,
                     googleId: googleId,
-                    "otp": Otpgen,
                     "Message": "Otp Sent Successfully"
                 });
             }
